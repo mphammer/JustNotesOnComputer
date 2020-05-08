@@ -2,6 +2,7 @@ import sys
 import datetime
 import re
 import os
+import fileinput
 
 
 def Move(startPath, destPath):
@@ -24,15 +25,28 @@ def Move(startPath, destPath):
         
         # Change all references to this file
         print("find ../ -type f -name \"*\.md\" -print0 | xargs -0 sed -i '' -e 's~{}~{}~g'".format(oldPath[3:], newPath[3:]))
-        # os.system("find ../ -type f -name \"*\.md\" -print0 | xargs -0 sed -i '' -e 's~{}~{}~g'".format(oldPath[3:], newPath[3:]))
+        os.system("find ../ -type f -name \"*\.md\" -print0 | xargs -0 sed -i '' -e 's~{}~{}~g'".format(oldPath[3:], newPath[3:]))
 
         # Change references within this file
         oldDepth = len(oldPath.split("/")) - 2
         oldRootPath = "../" * oldDepth
         newDepth = len(newPath.split("/")) - 2
         newRootPath = "../" * newDepth
-        print("sed -i '' -e 's~{}~{}~g' {}".format(oldRootPath, newRootPath, oldPath))
-        os.system("sed -i '' -e 's~{}~{}~g' {}".format(oldRootPath, newRootPath, oldPath))
+        # print("sed -i '' -e 's~{}~{}~g' {}".format(oldRootPath, newRootPath, oldPath))
+        # os.system("sed -i '' -e 's~{}~{}~g' {}".format(oldRootPath, newRootPath, oldPath))
+        print("replace: {} -> {}".format(oldRootPath, newRootPath))
+
+        reading_file = open(oldPath, "r")
+        new_file_content = ""
+        regOldRootPath = oldRootPath.replace(".", "\.")
+        for line in reading_file:
+            new_line = re.sub(regOldRootPath, newRootPath, line)
+            new_file_content += new_line
+        reading_file.close()
+
+        writing_file = open(oldPath, "w")
+        writing_file.write(new_file_content)
+        writing_file.close()
 
         # Create new directories
         print("mkdir -p {}".format(destPath))
