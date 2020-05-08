@@ -1,0 +1,1 @@
+cd _tools; python Get.py $1 $2

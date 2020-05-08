@@ -2,9 +2,7 @@ import sys
 import datetime
 import re
 
-def getID():
-    x = datetime.datetime.now()
-    return x.strftime("%Y%m%d%H%M%S")
+from id import *
 
 def printHelp():
     print("b - Book Summary")

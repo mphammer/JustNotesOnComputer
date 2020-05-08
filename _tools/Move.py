@@ -4,15 +4,14 @@ import re
 import os
 import fileinput
 
-
 def Move(startPath, destPath):
     startPath = startPath.strip("/")
     destPath = destPath.strip("/")
+    if os.path.isfile(destPath):
+        print("ERROR: destPath must be a directory - cannot rename the file")
 
-    isFile = os.path.isfile(startPath)
     dirpath, dirnames, filenames = ("", "", "")
-    if isFile:
-        print("siFile")
+    if os.path.isfile(startPath):
         dirpath = os.path.dirname(startPath)
         filenames = [os.path.basename(startPath)]
         dirnames = []
@@ -24,7 +23,7 @@ def Move(startPath, destPath):
         newPath = "{}/{}".format(destPath, filename)
         
         # Change all references to this file
-        print("find ../ -type f -name \"*\.md\" -print0 | xargs -0 sed -i '' -e 's~{}~{}~g'".format(oldPath[3:], newPath[3:]))
+        # print("find ../ -type f -name \"*\.md\" -print0 | xargs -0 sed -i '' -e 's~{}~{}~g'".format(oldPath[3:], newPath[3:]))
         os.system("find ../ -type f -name \"*\.md\" -print0 | xargs -0 sed -i '' -e 's~{}~{}~g'".format(oldPath[3:], newPath[3:]))
 
         # Change references within this file
@@ -32,10 +31,7 @@ def Move(startPath, destPath):
         oldRootPath = "../" * oldDepth
         newDepth = len(newPath.split("/")) - 2
         newRootPath = "../" * newDepth
-        # print("sed -i '' -e 's~{}~{}~g' {}".format(oldRootPath, newRootPath, oldPath))
-        # os.system("sed -i '' -e 's~{}~{}~g' {}".format(oldRootPath, newRootPath, oldPath))
-        print("replace: {} -> {}".format(oldRootPath, newRootPath))
-
+        # print("replace: {} -> {}".format(oldRootPath, newRootPath))
         reading_file = open(oldPath, "r")
         new_file_content = ""
         regOldRootPath = oldRootPath.replace(".", "\.")
@@ -43,24 +39,26 @@ def Move(startPath, destPath):
             new_line = re.sub(regOldRootPath, newRootPath, line)
             new_file_content += new_line
         reading_file.close()
-
         writing_file = open(oldPath, "w")
         writing_file.write(new_file_content)
         writing_file.close()
 
         # Create new directories
-        print("mkdir -p {}".format(destPath))
+        # print("mkdir -p {}".format(destPath))
         os.system("mkdir -p {}".format(destPath))
 
         # Move the file
-        print("mv {} {}".format(oldPath, newPath))
+        # print("mv {} {}".format(oldPath, newPath))
         os.system("mv  {} {}".format(oldPath, newPath))
 
-        print("")
+        # print("")
     for dirname in dirnames:
         Move("{}/{}".format(startPath,dirname), "{}/{}".format(destPath,dirname))
 
 if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print("Usage: ./mv <file_or_directory_path> <directory_path>")
+        sys.exit(1)
     startLoc = "../{}".format(sys.argv[1])
     destLoc = "../{}".format(sys.argv[2])
     Move(startLoc, destLoc)
