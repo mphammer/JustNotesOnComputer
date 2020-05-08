@@ -17,7 +17,10 @@ def PrintFiles():
         break
     filenames.sort()
     for filename in filenames:
-        print("{}/{}".format(dirpath, filename))
+        if filename[0] == ".":
+            continue
+        # filename = filename.replace(" ", "\ ")
+        print("\"{}/{}\"".format(dirpath, filename))
 
     print("")
 
@@ -27,7 +30,10 @@ def PrintFiles():
         break
     filenames.sort()
     for filename in filenames:
-        print("{}/{}".format(dirpath, filename))
+        if filename[0] == ".":
+            continue
+        # filename = filename.replace(" ", "\ ")
+        print("\"{}/{}\"".format(dirpath, filename))
     
 
 def Get(filePath, newName=""):
@@ -39,22 +45,18 @@ def Get(filePath, newName=""):
         name = newName
     filename = "{}-{}{}".format(name, id, extension)
     newPath = "../_data/{}".format(filename)
-    os.system("mv {} {}".format(filePath, newPath))
-    print("[{}]({})".format(filename, newPath))
+    os.system("mv \"{}\" \"{}\"".format(filePath, newPath))
+    print("![{}]({})".format(filename, newPath))
 
 if __name__ == "__main__":
     if len(sys.argv) > 3:
         print("Usage: ./get [filepath] [new_name]")
         sys.exit(1)
-    if len(sys.argv) == 1:
+    if sys.argv[1] == "":
         PrintFiles()
         sys.exit(0)
-    if len(sys.argv) == 2:
-        Get(sys.argv[1], "")
-        sys.exit(0)
-    if len(sys.argv) == 3:
-        Get(sys.argv[1], sys.argv[2])
-        sys.exit(0)
+    Get(sys.argv[1], sys.argv[2])
+    sys.exit(0)
     
 
     

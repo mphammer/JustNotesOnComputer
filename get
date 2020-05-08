@@ -1,1 +1,1 @@
-cd _tools; python Get.py $1 $2
+cd _tools; python Get.py "$1" "$2"

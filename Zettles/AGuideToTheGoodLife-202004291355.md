@@ -12,7 +12,7 @@ Related Notes:
 # Review
 Stoicism teaches its practitioner how to gain mental tranquility and avoid life’s greatest fear - concluding at the end that despite all our effort and striving that our life was a waste.
 
-# Book Sturcuture
+# Book Structure
 1 What is a Philosophy of Life  
 
 2 Psychological Techniques  
