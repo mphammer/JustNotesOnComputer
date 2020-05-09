@@ -9,7 +9,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"SecondBrain/_tools/util"
+	"SecondBrain/src/util"
 )
 
 func init() {

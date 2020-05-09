@@ -1,7 +1,7 @@
 package main
 
 import (
-	"SecondBrain/_tools/cmd"
+	"SecondBrain/src/cmd"
 )
 
 func main() {
