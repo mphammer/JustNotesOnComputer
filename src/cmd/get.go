@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/atotto/clipboard"
@@ -33,16 +34,28 @@ var getCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			listFiles()
-		} else if len(args) == 1 {
-			get(args[0], "")
+			return nil
+		}
+
+		filePath := args[0]
+		if num, err := strconv.Atoi(args[0]); err == nil {
+			filePath = GetFileByIndex(num)
+		}
+
+		var err error
+		if len(args) == 1 {
+			err = get(filePath, "")
 		} else {
-			get(args[0], args[1])
+			err = get(filePath, args[1])
+		}
+		if err != nil {
+			return fmt.Errorf("%+v", err)
 		}
 		return nil
 	},
 }
 
-func get(path, newName string) {
+func get(path, newName string) error {
 	id := util.GetID()
 
 	basename := filepath.Base(path)
@@ -54,21 +67,27 @@ func get(path, newName string) {
 
 	filename := fmt.Sprintf("%s-%s%s", name, id, extension)
 	newPath := fmt.Sprintf("_data/%s", filename)
-	util.Exec(fmt.Sprintf("mv \"%s\" \"%s\"", path, newPath))
+	_, err := util.Exec(fmt.Sprintf("mv \"%s\" \"%s\"", path, newPath))
+	if err != nil {
+		return fmt.Errorf("%+v", err)
+	}
 
 	pathDepth := strings.Repeat("../", Config.ProjectDepth)
 	markdownLink := fmt.Sprintf(fmt.Sprintf("![%s](%s%s)", filename, pathDepth, newPath))
-	err := clipboard.WriteAll(markdownLink)
+	err = clipboard.WriteAll(markdownLink)
 	if err == nil {
 		fmt.Printf("Copied to Clipboard: ")
 	}
 	fmt.Printf("%s\n", markdownLink)
+	return nil
 }
 
 func listFiles() {
 	home := homeDir()
 	desktopPath := fmt.Sprintf("%s/Desktop", home)
 	downloadsPath := fmt.Sprintf("%s/Downloads", home)
+
+	fileCount := 1
 
 	fmt.Printf("Desktop:\n")
 	dirpath, _, filenames, _ := util.GetFilesAndDirectories(desktopPath)
@@ -77,7 +96,8 @@ func listFiles() {
 		if filename[0:1] == "." {
 			continue
 		}
-		fmt.Printf("\"%s/%s\"\n", dirpath, filename)
+		fmt.Printf("[%d] \"%s/%s\"\n", fileCount, dirpath, filename)
+		fileCount = fileCount + 1
 	}
 
 	fmt.Println("")
@@ -89,8 +109,42 @@ func listFiles() {
 		if filename[0:1] == "." {
 			continue
 		}
-		fmt.Printf("\"%s/%s\"\n", dirpath, filename)
+		fmt.Printf("[%d] \"%s/%s\"\n", fileCount, dirpath, filename)
+		fileCount = fileCount + 1
 	}
+}
+
+func GetFileByIndex(index int) string {
+	home := homeDir()
+	desktopPath := fmt.Sprintf("%s/Desktop", home)
+	downloadsPath := fmt.Sprintf("%s/Downloads", home)
+
+	fileCount := 1
+
+	dirpath, _, filenames, _ := util.GetFilesAndDirectories(desktopPath)
+	sort.Strings(filenames)
+	for _, filename := range filenames {
+		if filename[0:1] == "." {
+			continue
+		}
+		if fileCount == index {
+			return fmt.Sprintf("%s/%s", dirpath, filename)
+		}
+		fileCount = fileCount + 1
+	}
+
+	dirpath, _, filenames, _ = util.GetFilesAndDirectories(downloadsPath)
+	sort.Strings(filenames)
+	for _, filename := range filenames {
+		if filename[0:1] == "." {
+			continue
+		}
+		if fileCount == index {
+			return fmt.Sprintf("%s/%s", dirpath, filename)
+		}
+		fileCount = fileCount + 1
+	}
+	return ""
 }
 
 func homeDir() string {
