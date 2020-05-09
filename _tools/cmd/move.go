@@ -2,8 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -41,7 +42,7 @@ func move(startPath, destPath string) error {
 	destPath = strings.Trim(destPath, "/")
 	destFilename := ""
 
-	dirpath, dirnames, filenames, err := GetFilesAndDirectories(startPath)
+	dirpath, dirnames, filenames, err := util.GetFilesAndDirectories(startPath)
 	if err != nil {
 		return fmt.Errorf("%+v", err)
 	}
@@ -66,8 +67,11 @@ func move(startPath, destPath string) error {
 
 		// Change all references to this file
 		cmd := fmt.Sprintf("find ../ -type f -name \"*\\.md\" -print0 | xargs -0 sed -i '' -e 's~%s~%s~g'", oldPath[3:], newPath[3:])
-		// util.Exec(cmd)
-		fmt.Printf("%+v\n", cmd)
+		_, err := util.Exec(cmd)
+		if err != nil {
+			return err
+		}
+		// fmt.Printf("%+v\n", cmd)
 
 		// Change references within this file
 		oldDepth := len(strings.Split(oldPath, "/")) - 2
@@ -75,30 +79,39 @@ func move(startPath, destPath string) error {
 		newDepth := len(strings.Split(newPath, "/")) - 2
 		newRootPath := strings.Repeat("../", newDepth)
 
-		fmt.Printf("%s -> %s\n", oldRootPath, newRootPath)
+		// fmt.Printf("%s -> %s\n", oldRootPath, newRootPath)
 
-		// lines := util.ReadFileLines(oldPath)
-		// currFile, err := os.Open(oldPath)
-		// if err != nil {
-		// 	return fmt.Errorf("failed create file: %s", err)
-		// }
-		// regOldRootPath = strings.Replace(oldRootPath, ".", "\\.")
-		// re := regexp.MustCompile(regOldRootPath)
-		// for _, txt := range lines {
-		// 	txt = string(re.ReplaceAll([]byte(txt), []byte(regOldRootPath))
-		// 	fmt.Fprintln(currFile, txt)
-		// }
-		// currFile.Close()
+		lines, err := util.ReadFileLines(oldPath)
+		if err != nil {
+			return fmt.Errorf("failed read old file: %s", err)
+		}
+		currFile, err := os.Open(oldPath)
+		if err != nil {
+			return fmt.Errorf("failed create file: %s", err)
+		}
+		regOldRootPath := strings.Replace(oldRootPath, ".", "\\.", -1)
+		re := regexp.MustCompile(regOldRootPath)
+		for _, txt := range lines {
+			txt = string(re.ReplaceAll([]byte(txt), []byte(newRootPath)))
+			fmt.Fprintln(currFile, txt)
+		}
+		currFile.Close()
 
 		// Create new directories
 		cmd = fmt.Sprintf("mkdir -p %s", destPath)
-		// util.Exec(cmd)
-		fmt.Printf("%+v\n", cmd)
+		_, err = util.Exec(cmd)
+		if err != nil {
+			return err
+		}
+		// fmt.Printf("%+v\n", cmd)
 
 		// Move the file
 		cmd = fmt.Sprintf("mv %s %s", oldPath, newPath)
-		// util.Exec(cmd)
-		fmt.Printf("%+v\n", cmd)
+		_, err = util.Exec(cmd)
+		if err != nil {
+			return err
+		}
+		// fmt.Printf("%+v\n", cmd)
 	}
 
 	for _, dirname := range dirnames {
@@ -107,24 +120,4 @@ func move(startPath, destPath string) error {
 
 	return nil
 
-}
-
-func GetFilesAndDirectories(path string) (string, []string, []string, error) {
-	filenames := []string{}
-	directories := []string{}
-
-	files, err := ioutil.ReadDir(path)
-	if err != nil {
-		return "", filenames, directories, nil
-	}
-
-	for _, f := range files {
-		if f.IsDir() {
-			directories = append(directories, f.Name())
-		} else {
-			filenames = append(filenames, f.Name())
-		}
-	}
-
-	return path, directories, filenames, nil
 }
