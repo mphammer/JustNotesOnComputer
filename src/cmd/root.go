@@ -22,7 +22,6 @@ func LoadConfig() {
 		fmt.Println("failed to read .vaultConfig.json")
 		os.Exit(1)
 	}
-	Config := ConfigFile{}
 	err = json.Unmarshal([]byte(file), &Config)
 	if err != nil {
 		fmt.Println("failed to unmarshal .vaultConfig.json")

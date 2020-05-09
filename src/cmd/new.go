@@ -82,7 +82,7 @@ func createGeneric(filename, templatePath string, patches map[string]string) err
 
 	noteFile.Close()
 
-	fmt.Printf("../%s\n", notePath)
+	fmt.Printf("%s\n", notePath)
 
 	return nil
 }
