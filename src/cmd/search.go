@@ -9,10 +9,13 @@ import (
 )
 
 var verbose bool
+var all bool
 
 func init() {
 	rootCmd.AddCommand(searchCmd)
 	searchCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "Print more information")
+	// TODO
+	searchCmd.Flags().BoolVarP(&all, "all", "a", false, "Search all files (not current project)")
 }
 
 var searchCmd = &cobra.Command{
@@ -24,9 +27,17 @@ var searchCmd = &cobra.Command{
 		}
 		return nil
 	},
+	PreRun: func(cmd *cobra.Command, args []string) {
+		LoadConfig()
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
+		searchPath := Config.Project
+		if all {
+			searchPath = "."
+		}
+
 		pattern := args[0]
-		grep, err := util.Exec(fmt.Sprintf("grep -r -n '%s' .", pattern))
+		grep, err := util.Exec(fmt.Sprintf("grep -r -n '%s' %s", pattern, searchPath))
 		if err != nil {
 			return fmt.Errorf("failed to grep: %+v", err)
 		}
@@ -34,7 +45,6 @@ var searchCmd = &cobra.Command{
 		grepLines := strings.Split(grep, "\n")
 
 		foundMap := map[string]bool{}
-
 		for _, line := range grepLines {
 			splitLine := strings.SplitN(line, ":", 3)
 			if len(splitLine) != 3 {
@@ -53,8 +63,6 @@ var searchCmd = &cobra.Command{
 				fmt.Printf("[%s] %s\n", lineNum, result)
 			}
 		}
-
-		// fmt.Printf("%+v\n", grepLines)
 		return nil
 	},
 }
