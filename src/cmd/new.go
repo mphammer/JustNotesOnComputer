@@ -76,7 +76,8 @@ func createGeneric(filename, templatePath string, patches map[string]string) err
 			txt = strings.Replace(txt, key, val, -1)
 		}
 		txt = strings.Replace(txt, "TODO_ZETTLE_ID", id, -1)
-		txt = strings.Replace(txt, "TODO_FILE_PATH", fmt.Sprintf("../%s", noteName), -1)
+		pathDepth := strings.Repeat("../", Config.ProjectDepth)
+		txt = strings.Replace(txt, "TODO_FILE_PATH", fmt.Sprintf("%s%s", pathDepth, noteName), -1)
 		fmt.Fprint(noteFile, txt)
 	}
 

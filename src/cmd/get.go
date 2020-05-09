@@ -27,6 +27,9 @@ var getCmd = &cobra.Command{
 		}
 		return nil
 	},
+	PreRun: func(cmd *cobra.Command, args []string) {
+		LoadConfig()
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			listFiles()
@@ -52,7 +55,9 @@ func get(path, newName string) {
 	filename := fmt.Sprintf("%s-%s%s", name, id, extension)
 	newPath := fmt.Sprintf("_data/%s", filename)
 	util.Exec(fmt.Sprintf("mv \"%s\" \"%s\"", path, newPath))
-	markdownLink := fmt.Sprintf(fmt.Sprintf("![%s](../%s)", filename, newPath))
+
+	pathDepth := strings.Repeat("../", Config.ProjectDepth)
+	markdownLink := fmt.Sprintf(fmt.Sprintf("![%s](%s%s)", filename, pathDepth, newPath))
 	err := clipboard.WriteAll(markdownLink)
 	if err == nil {
 		fmt.Printf("Copied to Clipboard: ")
