@@ -31,6 +31,9 @@ var newCmd = &cobra.Command{
 		}
 		return nil
 	},
+	PreRun: func(cmd *cobra.Command, args []string) {
+		LoadConfig()
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		noteType := args[0]
 		switch noteType {
@@ -50,7 +53,7 @@ var newCmd = &cobra.Command{
 }
 
 func createGeneric(filename, templatePath string, patches map[string]string) error {
-	path := "Staging"
+	path := Config.Project
 	id := util.GetID()
 	noteName := fmt.Sprintf("%s-%s.md", filename, id)
 	notePath := fmt.Sprintf("%s/%s", path, noteName)
