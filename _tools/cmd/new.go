@@ -54,11 +54,11 @@ func createBookSummary() error {
 	title := util.Input("Book Title: ")
 	filename := strings.Replace(title, " ", "", -1)
 	noteName := fmt.Sprintf("%s-%s.md", filename, id)
-	path := "../Zettles"
+	path := "Zettles"
 	notePath := fmt.Sprintf("%s/%s", path, noteName)
 
 	// Get lines from template file
-	lines, err := util.ReadFileLines("templates/_BookSummaries.md")
+	lines, err := util.ReadFileLines("_tools/templates/_BookSummaries.md")
 	if err != nil {
 		return fmt.Errorf("failed to read template: %+v", err)
 	}
@@ -72,15 +72,15 @@ func createBookSummary() error {
 	// Write lines to note
 	for _, txt := range lines {
 		txt = strings.Replace(txt, "TODO_ZETTLE_ID", id, -1)
-		txt = strings.Replace(txt, "TODO_FILENAME", noteName, -1)
+		txt = strings.Replace(txt, "TODO_FILE_PATH", fmt.Sprintf("../%s", noteName), -1)
 		txt = strings.Replace(txt, "TODO_MAIN_TITLE", title, -1)
 		txt = strings.Replace(txt, "TODO_BOOK_REFERENCE", filename, -1)
-		fmt.Fprintln(noteFile, txt)
+		fmt.Fprint(noteFile, txt)
 	}
 
 	noteFile.Close()
 
-	fmt.Printf("%s\n", notePath)
+	fmt.Printf("../%s\n", notePath)
 
 	return nil
 }
@@ -90,11 +90,11 @@ func createContact() error {
 	name := util.Input("Name: ")
 	nameTag := strings.Replace(name, " ", "", -1)
 	noteName := fmt.Sprintf("%s-%s.md", nameTag, id)
-	path := "../Zettles"
+	path := "Zettles"
 	notePath := fmt.Sprintf("%s/%s", path, noteName)
 
 	// Get lines from template file
-	lines, err := util.ReadFileLines("templates/_Contacts.md")
+	lines, err := util.ReadFileLines("_tools/templates/_Contacts.md")
 	if err != nil {
 		return fmt.Errorf("failed to read template: %+v", err)
 	}
@@ -108,7 +108,7 @@ func createContact() error {
 	// Write lines to note
 	for _, txt := range lines {
 		txt = strings.Replace(txt, "TODO_ZETTLE_ID", id, -1)
-		txt = strings.Replace(txt, "TODO_FILENAME", noteName, -1)
+		txt = strings.Replace(txt, "TODO_FILE_PATH", fmt.Sprintf("../%s", noteName), -1)
 		txt = strings.Replace(txt, "TODO_NAME", name, -1)
 		txt = strings.Replace(txt, "TODO_TAG", nameTag, -1)
 		fmt.Fprintln(noteFile, txt)
@@ -116,7 +116,7 @@ func createContact() error {
 
 	noteFile.Close()
 
-	fmt.Printf("%s\n", notePath)
+	fmt.Printf("../%s\n", notePath)
 
 	return nil
 }
@@ -129,11 +129,11 @@ func createJournal() error {
 	day := t.Day()
 	dateString := fmt.Sprintf("%s %d %d", month, day, year)
 	noteName := fmt.Sprintf("DailyNote-%s.md", id)
-	path := "../Zettles"
+	path := "Zettles"
 	notePath := fmt.Sprintf("%s/%s", path, noteName)
 
 	// Get lines from template file
-	lines, err := util.ReadFileLines("templates/_DailyNotes.md")
+	lines, err := util.ReadFileLines("_tools/templates/_DailyNotes.md")
 	if err != nil {
 		return fmt.Errorf("failed to read template: %+v", err)
 	}
@@ -148,13 +148,13 @@ func createJournal() error {
 	for _, txt := range lines {
 		txt = strings.Replace(txt, "TODO_DATE", dateString, -1)
 		txt = strings.Replace(txt, "TODO_ZETTLE_ID", id, -1)
-		txt = strings.Replace(txt, "TODO_FILENAME", noteName, -1)
+		txt = strings.Replace(txt, "TODO_FILE_PATH", fmt.Sprintf("../%s", noteName), -1)
 		fmt.Fprintln(noteFile, txt)
 	}
 
 	noteFile.Close()
 
-	fmt.Printf("%s\n", notePath)
+	fmt.Printf("../%s\n", notePath)
 
 	return nil
 }
@@ -164,11 +164,11 @@ func createNote() error {
 	noteTopic := util.Input("Note Topic: ")
 	fileName := strings.Replace(noteTopic, " ", "", -1)
 	noteName := fmt.Sprintf("%s-%s.md", fileName, id)
-	path := "../Zettles"
+	path := "Zettles"
 	notePath := fmt.Sprintf("%s/%s", path, noteName)
 
 	// Get lines from template file
-	lines, err := util.ReadFileLines("templates/_Zettles.md")
+	lines, err := util.ReadFileLines("_tools/templates/_Zettles.md")
 	if err != nil {
 		return fmt.Errorf("failed to read template: %+v", err)
 	}
@@ -183,13 +183,13 @@ func createNote() error {
 	for _, txt := range lines {
 		txt = strings.Replace(txt, "TODO_NOTE_TOPIC", noteTopic, -1)
 		txt = strings.Replace(txt, "TODO_ZETTLE_ID", id, -1)
-		txt = strings.Replace(txt, "TODO_FILENAME", noteName, -1)
+		txt = strings.Replace(txt, "TODO_FILE_PATH", fmt.Sprintf("../%s", noteName), -1)
 		fmt.Fprintln(noteFile, txt)
 	}
 
 	noteFile.Close()
 
-	fmt.Printf("%s\n", notePath)
+	fmt.Printf("../%s\n", notePath)
 
 	return nil
 }

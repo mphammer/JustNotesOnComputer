@@ -2,7 +2,7 @@
 ---
 **Metadata**  
 ID: TODO_ZETTLE_ID
-Filename: TODO_FILENAME
+File Path: TODO_FILE_PATH
 Tags: [ #TODO_TAGS ]  
 Related Notes:  
 [TODO_LINKS](.)  

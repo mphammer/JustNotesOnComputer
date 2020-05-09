@@ -50,9 +50,9 @@ func get(path, newName string) {
 	}
 
 	filename := fmt.Sprintf("%s-%s%s", name, id, extension)
-	newPath := fmt.Sprintf("../_data/%s", filename)
+	newPath := fmt.Sprintf("_data/%s", filename)
 	util.Exec(fmt.Sprintf("mv \"%s\" \"%s\"", path, newPath))
-	markdownLink := fmt.Sprintf(fmt.Sprintf("![%s](%s)", filename, newPath))
+	markdownLink := fmt.Sprintf(fmt.Sprintf("![%s](../%s)", filename, newPath))
 	err := clipboard.WriteAll(markdownLink)
 	if err == nil {
 		fmt.Printf("Copied to Clipboard: ")

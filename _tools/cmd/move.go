@@ -66,7 +66,7 @@ func move(startPath, destPath string) error {
 		}
 
 		// Change all references to this file
-		cmd := fmt.Sprintf("find ../ -type f -name \"*\\.md\" -print0 | xargs -0 sed -i '' -e 's~%s~%s~g'", oldPath[3:], newPath[3:])
+		cmd := fmt.Sprintf("find . -type f -name \"*\\.md\" -print0 | xargs -0 sed -i '' -e 's~%s~%s~g'", oldPath, newPath)
 		_, err := util.Exec(cmd)
 		if err != nil {
 			return err

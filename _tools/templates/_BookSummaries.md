@@ -3,7 +3,7 @@
 ---
 **Metadata**  
 ID: TODO_ZETTLE_ID  
-Filename: TODO_FILENAME
+File Path: TODO_FILE_PATH
 Tags: [ #BookSummary #TODO_TAGS ]  
 Related Notes:  
 [TODO_RELATED_NOTES](.)  

@@ -2,7 +2,7 @@
 ---
 **Metadata**  
 ID: TODO_ZETTLE_ID
-Filename: TODO_FILENAME
+File Path: TODO_FILE_PATH
 Tags: [ #Contact #TODO_TAG ]  
 Related Notes:  
 [link 1](N/A)  
