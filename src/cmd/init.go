@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"os"
 
 	"github.com/gobuffalo/packr"
 	"github.com/spf13/cobra"
@@ -49,8 +48,8 @@ var initCmd = &cobra.Command{
 		}
 
 		// Bash Completion - https://github.com/spf13/cobra/blob/master/bash_completions.md
-		fmt.Printf("For Command Completion copy this to .bashrc:\n")
-		rootCmd.GenBashCompletion(os.Stdout)
+		fmt.Printf("For Command Completion copy out.sh\n")
+		rootCmd.GenBashCompletionFile("out.sh")
 
 		return nil
 	},
