@@ -18,8 +18,11 @@ func init() {
 
 var moveCmd = &cobra.Command{
 	Use:     "move SOURCE TARGET",
+	Example: "Rename a file: move path/name.md newpath/newname.md\nMove a directory: move path/directory path/newdirectory",
 	Aliases: []string{"mv"},
-	Short:   "move the source to the target",
+	Short:   "Move or rename files",
+	Long: `If target is a filename: Rename source file to new filename and path.
+	If target is a directory: Move files from source directory to target directory.`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 2 {
 			return fmt.Errorf("this command takes 2 arguments")
@@ -31,11 +34,13 @@ var moveCmd = &cobra.Command{
 		target := args[1]
 		err := move(source, target)
 		if err != nil {
-			return fmt.Errorf("%+v", err)
+			return fmt.Errorf("failed to move files: %+v", err)
 		}
 		return nil
 	},
 }
+
+// TODO check if the current project was renamed
 
 func move(startPath, destPath string) error {
 	startPath = strings.Trim(startPath, "/")
@@ -44,15 +49,19 @@ func move(startPath, destPath string) error {
 
 	dirpath, dirnames, filenames, err := util.GetFilesAndDirectories(startPath)
 	if err != nil {
-		return fmt.Errorf("%+v", err)
+		return fmt.Errorf("failed to get files and directories: %+v", err)
 	}
 	if util.PathIsToFile(startPath) {
 		dirpath = filepath.Dir(startPath)
 		filenames = []string{filepath.Base(startPath)}
 		dirnames = []string{}
+		// handle new destination filename
 		if util.PathIsToFile(destPath) {
-			destFilename = filepath.Base(destPath)
 			destPath = filepath.Dir(destPath)
+			destFilename = filepath.Base(destPath)
+			if !util.FileHasID(destFilename) {
+				destFilename = util.AddFileID(destFilename)
+			}
 		}
 	} else if util.PathIsToFile(destPath) {
 		return fmt.Errorf("source is a directory - target cannot be a file")
@@ -69,7 +78,7 @@ func move(startPath, destPath string) error {
 		cmd := fmt.Sprintf("find . -type f -name \"*\\.md\" -print0 | xargs -0 sed -i '' -e 's~%s~%s~g'", oldPath, newPath)
 		_, err := util.Exec(cmd)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to execute '%+v': %+v", cmd, err)
 		}
 		// fmt.Printf("%+v\n", cmd)
 
@@ -101,7 +110,7 @@ func move(startPath, destPath string) error {
 		cmd = fmt.Sprintf("mkdir -p %s", destPath)
 		_, err = util.Exec(cmd)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to execute '%+v': %+v", cmd, err)
 		}
 		// fmt.Printf("%+v\n", cmd)
 
@@ -109,13 +118,16 @@ func move(startPath, destPath string) error {
 		cmd = fmt.Sprintf("mv %s %s", oldPath, newPath)
 		_, err = util.Exec(cmd)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to execute '%+v': %+v", cmd, err)
 		}
 		// fmt.Printf("%+v\n", cmd)
 	}
 
 	for _, dirname := range dirnames {
-		move(fmt.Sprintf("%s/%s", startPath, dirname), fmt.Sprintf("%s/%s", destPath, dirname))
+		err = move(fmt.Sprintf("%s/%s", startPath, dirname), fmt.Sprintf("%s/%s", destPath, dirname))
+		if err != nil {
+			return fmt.Errorf("failed to move subdirectory: %+v", err)
+		}
 	}
 
 	return nil

@@ -12,11 +12,11 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(newCmd)
+	rootCmd.AddCommand(noteCmd)
 }
 
-var newCmd = &cobra.Command{
-	Use:     "new NOTE_TYPE",
+var noteCmd = &cobra.Command{
+	Use:     "note NOTE_TYPE",
 	Aliases: []string{"n"},
 	Short:   "Create a new note",
 	Long: `Create a new note:
@@ -77,7 +77,7 @@ func createGeneric(filename, templatePath string, patches map[string]string) err
 			txt = strings.Replace(txt, key, val, -1)
 		}
 		txt = strings.Replace(txt, "TODO_ZETTLE_ID", id, -1)
-		txt = strings.Replace(txt, "TODO_FILE_PATH", fmt.Sprintf("%s/%s", config.Project, noteName), -1)
+		txt = strings.Replace(txt, "TODO_FILE_PATH", fmt.Sprintf("%s/%s", Config.Project, noteName), -1)
 		fmt.Fprint(noteFile, txt)
 	}
 

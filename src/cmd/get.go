@@ -33,13 +33,19 @@ var getCmd = &cobra.Command{
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
-			listFiles()
+			err := listFiles()
+			if err != nil {
+				return fmt.Errorf("failed to list files: %+v", err)
+			}
 			return nil
 		}
 
 		filePath := args[0]
 		if num, err := strconv.Atoi(args[0]); err == nil {
-			filePath = GetFileByIndex(num)
+			filePath, err = GetFileByIndex(num)
+			if err != nil {
+				return fmt.Errorf("failed to get file number %d: %+v", num, err)
+			}
 		}
 
 		var err error
@@ -49,7 +55,7 @@ var getCmd = &cobra.Command{
 			err = get(filePath, args[1])
 		}
 		if err != nil {
-			return fmt.Errorf("%+v", err)
+			return fmt.Errorf("failed to get file: %+v", err)
 		}
 		return nil
 	},
@@ -67,9 +73,10 @@ func get(path, newName string) error {
 
 	filename := fmt.Sprintf("%s-%s%s", name, id, extension)
 	newPath := fmt.Sprintf("_data/%s", filename)
-	_, err := util.Exec(fmt.Sprintf("mv \"%s\" \"%s\"", path, newPath))
+	cmd := fmt.Sprintf("mv \"%s\" \"%s\"", path, newPath)
+	_, err := util.Exec(cmd)
 	if err != nil {
-		return fmt.Errorf("%+v", err)
+		return fmt.Errorf("failed to execute '%+v': %+v", cmd, err)
 	}
 
 	pathDepth := strings.Repeat("../", Config.ProjectDepth)
@@ -77,74 +84,75 @@ func get(path, newName string) error {
 	err = clipboard.WriteAll(markdownLink)
 	if err == nil {
 		fmt.Printf("Copied to Clipboard: ")
+	} else {
+		fmt.Printf("Failed to Copy to Clipboard\n")
 	}
 	fmt.Printf("%s\n", markdownLink)
 	return nil
 }
 
-func listFiles() {
+func listFiles() error {
 	home := homeDir()
 	desktopPath := fmt.Sprintf("%s/Desktop", home)
 	downloadsPath := fmt.Sprintf("%s/Downloads", home)
 
+	paths := []string{
+		desktopPath,
+		downloadsPath,
+	}
+
 	fileCount := 1
 
-	fmt.Printf("Desktop:\n")
-	dirpath, _, filenames, _ := util.GetFilesAndDirectories(desktopPath)
-	sort.Strings(filenames)
-	for _, filename := range filenames {
-		if filename[0:1] == "." {
-			continue
+	for _, path := range paths {
+		fmt.Printf("%+v\n", path)
+		dirpath, _, filenames, err := util.GetFilesAndDirectories(path)
+		if err != nil {
+			return fmt.Errorf("failed to list files at '%+v': %+v", path, err)
 		}
-		fmt.Printf("[%d] \"%s/%s\"\n", fileCount, dirpath, filename)
-		fileCount = fileCount + 1
-	}
-
-	fmt.Println("")
-
-	fmt.Printf("Downloads:\n")
-	dirpath, _, filenames, _ = util.GetFilesAndDirectories(downloadsPath)
-	sort.Strings(filenames)
-	for _, filename := range filenames {
-		if filename[0:1] == "." {
-			continue
+		sort.Strings(filenames)
+		for _, filename := range filenames {
+			if filename[0:1] == "." {
+				continue
+			}
+			fmt.Printf("[%d] \"%s/%s\"\n", fileCount, dirpath, filename)
+			fileCount = fileCount + 1
 		}
-		fmt.Printf("[%d] \"%s/%s\"\n", fileCount, dirpath, filename)
-		fileCount = fileCount + 1
+		fmt.Println("")
 	}
+	return nil
 }
 
-func GetFileByIndex(index int) string {
+func GetFileByIndex(index int) (string, error) {
 	home := homeDir()
 	desktopPath := fmt.Sprintf("%s/Desktop", home)
 	downloadsPath := fmt.Sprintf("%s/Downloads", home)
 
+	paths := []string{
+		desktopPath,
+		downloadsPath,
+	}
+
 	fileCount := 1
 
-	dirpath, _, filenames, _ := util.GetFilesAndDirectories(desktopPath)
-	sort.Strings(filenames)
-	for _, filename := range filenames {
-		if filename[0:1] == "." {
-			continue
+	for _, path := range paths {
+		fmt.Printf("%+v\n", path)
+		dirpath, _, filenames, err := util.GetFilesAndDirectories(path)
+		if err != nil {
+			return "", fmt.Errorf("failed to list files at '%+v': %+v", path, err)
 		}
-		if fileCount == index {
-			return fmt.Sprintf("%s/%s", dirpath, filename)
+		sort.Strings(filenames)
+		for _, filename := range filenames {
+			if filename[0:1] == "." {
+				continue
+			}
+			if fileCount == index {
+				return fmt.Sprintf("%s/%s", dirpath, filename), nil
+			}
+			fileCount = fileCount + 1
 		}
-		fileCount = fileCount + 1
 	}
 
-	dirpath, _, filenames, _ = util.GetFilesAndDirectories(downloadsPath)
-	sort.Strings(filenames)
-	for _, filename := range filenames {
-		if filename[0:1] == "." {
-			continue
-		}
-		if fileCount == index {
-			return fmt.Sprintf("%s/%s", dirpath, filename)
-		}
-		fileCount = fileCount + 1
-	}
-	return ""
+	return "", fmt.Errorf("failed to locate file number %d", index)
 }
 
 func homeDir() string {

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"os"
 
 	"github.com/gobuffalo/packr"
 	"github.com/spf13/cobra"
@@ -46,6 +47,10 @@ var initCmd = &cobra.Command{
 				return fmt.Errorf("failed to write to _templates/%s.md: %+v", templateName, err)
 			}
 		}
+
+		// Bash Completion - https://github.com/spf13/cobra/blob/master/bash_completions.md
+		fmt.Printf("For Command Completion copy this to .bashrc:\n")
+		rootCmd.GenBashCompletion(os.Stdout)
 
 		return nil
 	},
