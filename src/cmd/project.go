@@ -2,9 +2,7 @@ package cmd
 
 import (
 	"SecondBrain/src/util"
-	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"strconv"
 	"strings"
 
@@ -13,11 +11,13 @@ import (
 
 var newProject bool
 var listProjects bool
+var newProjectName string
 
 func init() {
 	rootCmd.AddCommand(projectCmd)
 	projectCmd.Flags().BoolVarP(&newProject, "new", "n", false, "Create a new Project")
 	projectCmd.Flags().BoolVarP(&listProjects, "list", "l", false, "List all Projects")
+	projectCmd.Flags().StringVarP(&newProjectName, "rename", "r", "", "Rename the Project")
 }
 
 var projectCmd = &cobra.Command{
@@ -65,18 +65,17 @@ var projectCmd = &cobra.Command{
 			}
 		}
 
+		if !util.NoteOrProjectExists(projectPath) {
+			return fmt.Errorf("Project '%+v' does not exist", projectPath)
+		}
+
 		Config.Project = projectPath
 		newDepth := len(strings.Split(projectPath, "/"))
 		Config.ProjectDepth = newDepth
 
-		configBytes, err := json.MarshalIndent(Config, "", " ")
+		err := SaveConfig()
 		if err != nil {
-			return fmt.Errorf("failed to serialize Vault Config: %+v", err)
-		}
-
-		err = ioutil.WriteFile(".vaultConfig.json", configBytes, 0644)
-		if err != nil {
-			return fmt.Errorf("failed to write to .vaultConfig.json: %+v", err)
+			return fmt.Errorf("failed to save config file: %+v", err)
 		}
 		fmt.Printf("Set Project: %s\n", projectPath)
 		return nil
@@ -99,7 +98,7 @@ func ListProjects() error {
 }
 
 func ListProjectsHelper(count *int, path string) error {
-	if NotProject(path) {
+	if NotProjectPath(path) {
 		return nil
 	}
 	currProjStr := " "
@@ -142,7 +141,7 @@ func GetDirByIndex(targetIndex int) (string, error) {
 }
 
 func GetDirByIndexHelper(currPath string, currIndex *int, targetIndex int) (string, error) {
-	if NotProject(currPath) {
+	if NotProjectPath(currPath) {
 		return "", nil
 	}
 	if *currIndex == targetIndex {
@@ -166,7 +165,7 @@ func GetDirByIndexHelper(currPath string, currIndex *int, targetIndex int) (stri
 	return "", err
 }
 
-func NotProject(projectPath string) bool {
+func NotProjectPath(projectPath string) bool {
 	if len(projectPath) > 1 && (projectPath[0:1] == "." || projectPath[0:1] == "_") {
 		return true
 	}

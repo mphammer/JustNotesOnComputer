@@ -29,6 +29,19 @@ func LoadConfig() {
 	}
 }
 
+func SaveConfig() error {
+	configBytes, err := json.MarshalIndent(Config, "", " ")
+	if err != nil {
+		return fmt.Errorf("failed to serialize Vault Config: %+v", err)
+	}
+
+	err = ioutil.WriteFile(".vaultConfig.json", configBytes, 0644)
+	if err != nil {
+		return fmt.Errorf("failed to write to .vaultConfig.json: %+v", err)
+	}
+	return nil
+}
+
 var rootCmd = &cobra.Command{
 	Use:   "vault",
 	Short: "Your second brain",

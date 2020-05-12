@@ -11,8 +11,11 @@ import (
 	"SecondBrain/src/util"
 )
 
+var newNoteName string
+
 func init() {
 	rootCmd.AddCommand(noteCmd)
+	noteCmd.Flags().StringVarP(&newNoteName, "rename", "r", "", "Rename the note")
 }
 
 var noteCmd = &cobra.Command{
@@ -27,8 +30,8 @@ Note Types:
 - journal, j  
 - note, n`,
 	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) != 1 {
-			return fmt.Errorf("this command takes 1 argument")
+		if len(args) > 1 {
+			return fmt.Errorf("this command takes up to 1 argument")
 		}
 		return nil
 	},
@@ -36,15 +39,18 @@ Note Types:
 		LoadConfig()
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		noteType := args[0]
-		switch noteType {
-		case "booksummary", "bs":
+		noteType := "N"
+		if len(args) == 1 {
+			noteType = args[0]
+		}
+		switch strings.ToUpper(noteType) {
+		case "BOOKSUMMARY", "BS":
 			createBookSummary()
-		case "contact", "c":
+		case "CONTACT", "C":
 			createContact()
-		case "journal", "j":
+		case "JOURNAL", "J":
 			createJournal()
-		case "note", "n":
+		case "NOTE", "N":
 			createNote()
 		default:
 			return fmt.Errorf("'%s' is not a valid note type", noteType)
@@ -77,7 +83,11 @@ func createGeneric(filename, templatePath string, patches map[string]string) err
 			txt = strings.Replace(txt, key, val, -1)
 		}
 		txt = strings.Replace(txt, "TODO_ZETTLE_ID", id, -1)
-		txt = strings.Replace(txt, "TODO_FILE_PATH", fmt.Sprintf("%s/%s", Config.Project, noteName), -1)
+		filePath := fmt.Sprintf("%s/%s", Config.Project, noteName)
+		txt = strings.Replace(txt, "TODO_FILE_PATH", filePath, -1)
+		fileDepth := len(strings.Split(filePath, "/")) - 1
+		pathToRoot := strings.Repeat("../", fileDepth)
+		txt = strings.Replace(txt, "TODO_ROOT_PATH", pathToRoot, -1)
 		fmt.Fprint(noteFile, txt)
 	}
 
