@@ -5,7 +5,7 @@
 ID: TODO_ZETTLE_ID  
 File Path: TODO_FILE_PATH  
 Root Path: TODO_ROOT_PATH  
-Tags: [ #BookSummary #TODO_TAGS ]  
+Tags: [ #BookSummary #TODO_BOOK_NAME_TAG #TODO_TAGS ]  
 Related Notes:  
 [TODO_RELATED_NOTES](.)  
 
@@ -14,7 +14,7 @@ Related Notes:
 # Review
 TODO...
 
-# Book Sturcuture
+# Book Structure
 TODO...
 
 --- 

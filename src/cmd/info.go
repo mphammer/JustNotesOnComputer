@@ -4,9 +4,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func init() {
-	rootCmd.AddCommand(infoCmd)
-}
+// func init() {
+// 	rootCmd.AddCommand(infoCmd)
+// }
 
 var infoCmd = &cobra.Command{
 	Use:   "info",

@@ -3,26 +3,22 @@ package cmd
 import (
 	"SecondBrain/src/util"
 	"fmt"
-	"strconv"
-	"strings"
 
 	"github.com/spf13/cobra"
 )
 
 var newProject bool
-var listProjects bool
 var newProjectName string
 
 func init() {
 	rootCmd.AddCommand(projectCmd)
 	projectCmd.Flags().BoolVarP(&newProject, "new", "n", false, "Create a new Project")
-	projectCmd.Flags().BoolVarP(&listProjects, "list", "l", false, "List all Projects")
 	projectCmd.Flags().StringVarP(&newProjectName, "rename", "r", "", "Rename the Project")
 }
 
 var projectCmd = &cobra.Command{
-	Use:     "project NAME",
-	Short:   "List, Create, and Set Projects",
+	Use:     "project [NAME]",
+	Short:   "List, Create, and Rename Projects",
 	Aliases: []string{"p", "proj"},
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 1 {
@@ -43,11 +39,6 @@ var projectCmd = &cobra.Command{
 			}
 			return nil
 		}
-		if listProjects {
-			// TODO list all projects with numbers (ex: [1] Staging [2] SlipBox)
-			// TODO add ability for user to set the project by number
-			return nil
-		}
 		if newProject {
 			// Create a new Project
 			execCmd := fmt.Sprintf("mkdir -p %s", args[0])
@@ -55,29 +46,12 @@ var projectCmd = &cobra.Command{
 			if err != nil {
 				return fmt.Errorf("failed to execute '%+v': %+v", cmd, err)
 			}
+			fmt.Printf("Created Project: %s\n", args[0])
 		}
-		// Set the project
-		projectPath := args[0]
-		if num, err := strconv.Atoi(args[0]); err == nil {
-			projectPath, err = GetDirByIndex(num)
-			if err != nil {
-				return fmt.Errorf("failed to get project number '%d': %+v", num, err)
-			}
+		if newProjectName != "" {
+			// TODO MoveDirectory()
+			fmt.Printf("functionality not implemented yet... use move command\n")
 		}
-
-		if !util.NoteOrProjectExists(projectPath) {
-			return fmt.Errorf("Project '%+v' does not exist", projectPath)
-		}
-
-		Config.Project = projectPath
-		newDepth := len(strings.Split(projectPath, "/"))
-		Config.ProjectDepth = newDepth
-
-		err := SaveConfig()
-		if err != nil {
-			return fmt.Errorf("failed to save config file: %+v", err)
-		}
-		fmt.Printf("Set Project: %s\n", projectPath)
 		return nil
 	},
 }

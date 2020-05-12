@@ -12,16 +12,18 @@ import (
 )
 
 var newNoteName string
+var noteProjectName string
 
 func init() {
 	rootCmd.AddCommand(noteCmd)
-	noteCmd.Flags().StringVarP(&newNoteName, "rename", "r", "", "Rename the note")
+	noteCmd.Flags().StringVarP(&newNoteName, "rename", "r", "", "Rename the note") // TODO (maybe make function)
+	noteCmd.Flags().StringVarP(&noteProjectName, "project", "p", "", "Project to create note in")
 }
 
 var noteCmd = &cobra.Command{
 	Use:     "note NOTE_TYPE",
 	Aliases: []string{"n"},
-	Short:   "Create a new note",
+	Short:   "Create and rename Notes",
 	Long: `Create a new note:
 	
 Note Types:
@@ -60,10 +62,13 @@ Note Types:
 }
 
 func createGeneric(filename, templatePath string, patches map[string]string) error {
-	path := Config.Project
+	projectPath := Config.Project
+	if noteProjectName != "" {
+		projectPath = noteProjectName
+	}
 	id := util.GetID()
 	noteName := fmt.Sprintf("%s-%s.md", filename, id)
-	notePath := fmt.Sprintf("%s/%s", path, noteName)
+	notePath := fmt.Sprintf("%s/%s", projectPath, noteName)
 
 	// Get lines from template file
 	lines, err := util.ReadFileLines(templatePath)
@@ -83,7 +88,7 @@ func createGeneric(filename, templatePath string, patches map[string]string) err
 			txt = strings.Replace(txt, key, val, -1)
 		}
 		txt = strings.Replace(txt, "TODO_ZETTLE_ID", id, -1)
-		filePath := fmt.Sprintf("%s/%s", Config.Project, noteName)
+		filePath := fmt.Sprintf("%s/%s", projectPath, noteName)
 		txt = strings.Replace(txt, "TODO_FILE_PATH", filePath, -1)
 		fileDepth := len(strings.Split(filePath, "/")) - 1
 		pathToRoot := strings.Repeat("../", fileDepth)
@@ -106,6 +111,7 @@ func createBookSummary() error {
 	patches := map[string]string{
 		"TODO_MAIN_TITLE":     title,
 		"TODO_BOOK_REFERENCE": filename,
+		"TODO_BOOK_NAME_TAG":  filename,
 	}
 	templatePath := "_templates/BookSummary.md"
 	createGeneric(filename, templatePath, patches)

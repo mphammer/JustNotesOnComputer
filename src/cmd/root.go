@@ -16,15 +16,17 @@ type ConfigFile struct {
 
 var Config ConfigFile
 
+var ConfigName = ".jasonConfig.json"
+
 func LoadConfig() {
-	file, err := ioutil.ReadFile(".vaultConfig.json")
+	file, err := ioutil.ReadFile(ConfigName)
 	if err != nil {
-		fmt.Println("failed to read .vaultConfig.json")
+		fmt.Printf("failed to read %s\n", ConfigName)
 		os.Exit(1)
 	}
 	err = json.Unmarshal([]byte(file), &Config)
 	if err != nil {
-		fmt.Println("failed to unmarshal .vaultConfig.json")
+		fmt.Printf("failed to unmarshal %s\n", ConfigName)
 		os.Exit(1)
 	}
 }
@@ -35,16 +37,16 @@ func SaveConfig() error {
 		return fmt.Errorf("failed to serialize Vault Config: %+v", err)
 	}
 
-	err = ioutil.WriteFile(".vaultConfig.json", configBytes, 0644)
+	err = ioutil.WriteFile(ConfigName, configBytes, 0644)
 	if err != nil {
-		return fmt.Errorf("failed to write to .vaultConfig.json: %+v", err)
+		return fmt.Errorf("failed to write to %s: %+v", ConfigName, err)
 	}
 	return nil
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "vault",
-	Short: "Your second brain",
+	Use:   "jason",
+	Short: "Tool for managing Just A System Of Notes",
 	Run: func(cmd *cobra.Command, args []string) {
 	},
 }

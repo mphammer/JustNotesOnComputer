@@ -4,13 +4,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func init() {
-	rootCmd.AddCommand(debugCmd)
-}
+// func init() {
+// 	rootCmd.AddCommand(debugCmd)
+// }
 
 var debugCmd = &cobra.Command{
 	Use:   "debug",
-	Short: "Check the vault is configured properly",
+	Short: "Debug issues with your System of Notes",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Check all links point to files
 		// Check all ../'s go to the correct depth

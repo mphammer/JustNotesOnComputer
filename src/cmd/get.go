@@ -14,14 +14,17 @@ import (
 	"SecondBrain/src/util"
 )
 
+var getProjectName string
+
 func init() {
 	rootCmd.AddCommand(getCmd)
+	getCmd.Flags().StringVarP(&getProjectName, "project", "p", "", "Project to get data for")
 }
 
 var getCmd = &cobra.Command{
 	Use:     "get",
 	Aliases: []string{"g"},
-	Short:   "Get files from Desktop or Downloads",
+	Short:   "Get data from Desktop or Downloads",
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 3 {
 			return fmt.Errorf("this command takes up to 3 arguments")
@@ -79,7 +82,12 @@ func get(path, newName string) error {
 		return fmt.Errorf("failed to execute '%+v': %+v", cmd, err)
 	}
 
-	pathDepth := strings.Repeat("../", Config.ProjectDepth)
+	projectPath := Config.Project
+	if getProjectName != "" {
+		projectPath = getProjectName
+	}
+	projectDepth := len(strings.Split(projectPath, "/"))
+	pathDepth := strings.Repeat("../", projectDepth)
 	markdownLink := fmt.Sprintf(fmt.Sprintf("![%s](%s%s)", filename, pathDepth, newPath))
 	err = clipboard.WriteAll(markdownLink)
 	if err == nil {

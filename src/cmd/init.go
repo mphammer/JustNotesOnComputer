@@ -16,7 +16,7 @@ func init() {
 
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "Initialize your Vault",
+	Short: "Initialize your System of Notes",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Create directores
 		util.Exec("mkdir _data")
@@ -32,9 +32,9 @@ var initCmd = &cobra.Command{
 		if err != nil {
 			return fmt.Errorf("failed to serialize Vault Config: %+v", err)
 		}
-		err = ioutil.WriteFile(".vaultConfig.json", configBytes, 0644)
+		err = ioutil.WriteFile(ConfigName, configBytes, 0644)
 		if err != nil {
-			return fmt.Errorf("failed to write to .vaultConfig.json: %+v", err)
+			return fmt.Errorf("failed to write to %s: %+v", ConfigName, err)
 		}
 
 		// Create Templates
