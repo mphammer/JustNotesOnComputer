@@ -18,7 +18,7 @@ func init() {
 
 var setCmd = &cobra.Command{
 	Use:     "set NAME",
-	Short:   "Set Project to work in",
+	Short:   "Switch Projects to work in",
 	Aliases: []string{"s"},
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 1 {

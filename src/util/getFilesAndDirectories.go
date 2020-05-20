@@ -1,6 +1,9 @@
 package util
 
-import "io/ioutil"
+import (
+	"fmt"
+	"io/ioutil"
+)
 
 func GetFilesAndDirectories(path string) (string, []string, []string, error) {
 	filenames := []string{}
@@ -8,7 +11,7 @@ func GetFilesAndDirectories(path string) (string, []string, []string, error) {
 
 	files, err := ioutil.ReadDir(path)
 	if err != nil {
-		return "", filenames, directories, nil
+		return "", filenames, directories, fmt.Errorf("%+v", err)
 	}
 
 	for _, f := range files {
