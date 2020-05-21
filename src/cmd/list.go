@@ -25,9 +25,6 @@ var listCmd = &cobra.Command{
 		}
 		return nil
 	},
-	PreRun: func(cmd *cobra.Command, args []string) {
-		LoadConfig()
-	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		path := Config.Project
 		if len(args) != 0 {

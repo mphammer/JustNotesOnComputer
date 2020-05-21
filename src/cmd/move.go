@@ -55,9 +55,6 @@ TARGET: Path to a file or project.
 		}
 		return nil
 	},
-	PreRun: func(cmd *cobra.Command, args []string) {
-		LoadConfig()
-	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		sourcePath := strings.Trim(args[0], "/")
 		targetPath := strings.Trim(args[1], "/")

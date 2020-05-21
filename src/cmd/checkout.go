@@ -12,26 +12,27 @@ import (
 var setNewProject bool
 
 func init() {
-	rootCmd.AddCommand(setCmd)
-	setCmd.Flags().BoolVarP(&setNewProject, "new", "n", false, "Create and set to a new Project")
+	rootCmd.AddCommand(checkoutCmd)
+	checkoutCmd.Flags().BoolVarP(&setNewProject, "new", "n", false, "Create and set to a new Project")
 }
 
-var setCmd = &cobra.Command{
-	Use:     "set NAME",
+var checkoutCmd = &cobra.Command{
+	Use:     "checkout NAME",
 	Short:   "Switch Projects to work in",
-	Aliases: []string{"s"},
+	Aliases: []string{"c"},
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 1 {
 			return fmt.Errorf("this command takes up to 1 argument")
 		}
 		return nil
 	},
-	PreRun: func(cmd *cobra.Command, args []string) {
-		LoadConfig()
-	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			fmt.Printf("Current Project: %+v\n", Config.Project)
+			err := ListProjects()
+			if err != nil {
+				return fmt.Errorf("%+v", err)
+			}
 			return nil
 		}
 		if setNewProject {

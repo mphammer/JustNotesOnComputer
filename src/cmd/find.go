@@ -30,9 +30,6 @@ var findCmd = &cobra.Command{
 		}
 		return nil
 	},
-	PreRun: func(cmd *cobra.Command, args []string) {
-		LoadConfig()
-	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		searchPath := Config.Project
 		if findCmdProjectName != "" {
@@ -83,9 +80,6 @@ var findNoteCmd = &cobra.Command{
 		}
 		return nil
 	},
-	PreRun: func(cmd *cobra.Command, args []string) {
-		LoadConfig()
-	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		searchPath := Config.Project
 		if findCmdProjectName != "" {
@@ -97,7 +91,6 @@ var findNoteCmd = &cobra.Command{
 
 		pattern := args[0]
 		execCmd := fmt.Sprintf("find %s | grep '%s'", searchPath, pattern)
-		fmt.Printf("HERE: %+v\n", execCmd)
 		grep, err := util.Exec(execCmd)
 		if err != nil {
 			return fmt.Errorf("failed to grep: %+v", err)

@@ -31,9 +31,6 @@ var getCmd = &cobra.Command{
 		}
 		return nil
 	},
-	PreRun: func(cmd *cobra.Command, args []string) {
-		LoadConfig()
-	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			err := listFiles()

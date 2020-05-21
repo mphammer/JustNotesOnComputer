@@ -37,9 +37,6 @@ Note Types:
 		}
 		return nil
 	},
-	PreRun: func(cmd *cobra.Command, args []string) {
-		LoadConfig()
-	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		noteType := "N"
 		if len(args) == 1 {

@@ -17,6 +17,8 @@ func init() {
 var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Initialize your System of Notes",
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		// Create directores
 		util.Exec("mkdir _data")
@@ -27,6 +29,14 @@ var initCmd = &cobra.Command{
 		c := ConfigFile{
 			Project:      "Staging",
 			ProjectDepth: 1,
+			History: HistoryConfig{
+				Log:            make([]string, 20),
+				StartIndex:     1,
+				EndIndex:       0,
+				Length:         0,
+				Capacity:       20,
+				CommonCommands: map[string]int{},
+			},
 		}
 		configBytes, err := json.MarshalIndent(c, "", " ")
 		if err != nil {
