@@ -16,8 +16,8 @@ func init() {
 }
 
 var listCmd = &cobra.Command{
-	Use:     "list [PROJECT]",
-	Short:   "List Notes, Projects, and Tags",
+	Use:     "list [PROJECT_PATH]",
+	Short:   "List Notes and Tags within Projects",
 	Aliases: []string{"ls"},
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 1 {
@@ -29,11 +29,11 @@ var listCmd = &cobra.Command{
 		LoadConfig()
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		path := args[0]
+		path := Config.Project
+		if len(args) != 0 {
+			path = args[0]
+		}
 		if printTree {
-			if len(args) == 0 {
-				path = "."
-			}
 			err := PrintTree(path, 0)
 			if err != nil {
 				return fmt.Errorf("%+v", err)
@@ -59,9 +59,9 @@ func PrintDirectoryContents(path string) error {
 			continue
 		}
 		if f.IsDir() {
-			fmt.Printf("%+v\n", f.Name())
+			fmt.Printf("%s/%+v\n", path, f.Name())
 		} else {
-			fmt.Printf("%+v\n", f.Name())
+			fmt.Printf("%s/%+v\n", path, f.Name())
 		}
 	}
 

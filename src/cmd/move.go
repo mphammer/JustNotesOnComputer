@@ -19,28 +19,36 @@ func init() {
 var moveCmd = &cobra.Command{
 	Use: "move SOURCE TARGET",
 	Example: `Move a file:
-$ ./m move <path/name.md> <newpath>
+$ ./jason move <path/name.md> <newpath>
 
 Rename a file:
-$ ./m move <path/name-ID.md> <newpath/newname>       // a new ID will be added
-$ ./m move <path/name-ID.md> <newpath/newname-ID.md> // provided ID is used
+$ ./jason move <path/name-ID.md> <newpath/newname>       // a new ID will be added
+$ ./jason move <path/name-ID.md> <newpath/newname-ID.md> // provided ID is used
 
-Move a file and rename:
-$ ./m move <path/name.md> <newpath/newname-ID.md>
+Move and rename a file:
+$ ./jason move <path/name.md> <newpath/newname-ID.md>
 
 Move a directory:
-$ ./m move <directorypath/directoryname> <newdirectorypath/directoryname>
+$ ./jason move <directorypath/directoryname> <newdirectorypath/directoryname>
 
 Rename a directory:
-$ ./m move <directorypath/directoryname> <directorypath/newdirectoryname>
+$ ./jason move <directorypath/directoryname> <directorypath/newdirectoryname>
 
 Move and rename a directory:
-$ ./m move <directorypath/directoryname> <newdirectorypath/newdirectoryname>`,
+$ ./jason move <directorypath/directoryname> <newdirectorypath/newdirectoryname>`,
 	Aliases: []string{"mv"},
 	Short:   "Move and/or rename Notes and Projects",
 	Long: `Move and/or rename Notes and Projects:
-- If target is a filename: Rename source file to new filename and path.
-- If target is a directory: Move files from source directory to target directory.`,
+
+SOURCE: Path to a file or project.
+TARGET: Path to a file or project.
+
+- If SOURCE is a file: 
+  - If TARGET is a file: Move SOURCE to new path and rename it to the TARGET filename.
+  - If TARGET is a project: Move SOURCE to new path.
+- If SOURCE is a project: 
+  - If TARGET name is the same: Move SOURCE to new path.
+  - If TARGET name is different: Move SOURCE to new path and rename it to the TARGET name.`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 2 {
 			return fmt.Errorf("this command takes 2 arguments")
