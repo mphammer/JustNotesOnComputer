@@ -3,14 +3,14 @@
  "projectDepth": 1,
  "history": {
   "log": [
-   "jason project",
+   "./jason",
    "jason project",
    "jason get",
    "jason checkout",
-   "jason get"
+   "./jason"
   ],
-  "startIndex": 4,
-  "endIndex": 3,
+  "startIndex": 1,
+  "endIndex": 0,
   "length": 5,
   "capacity": 5,
   "commonCommands": {}
