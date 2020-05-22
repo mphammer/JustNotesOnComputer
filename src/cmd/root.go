@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 type ConfigFile struct {
@@ -83,8 +85,27 @@ var rootCmd = &cobra.Command{
 			Config.History.Length = Config.History.Length + 1
 		}
 
+		// Create args string
+		argsString := strings.Join(args, " ")
+
+		// Create flags string
+		flagsString := ""
+		flags := cmd.Flags()
+		flags.Visit(func(f *pflag.Flag) {
+			name := f.Name
+			value := f.Value.String()
+			flagsString = fmt.Sprintf("%s --%s %s", flagsString, name, value)
+		})
+
 		// Write the command to history
-		Config.History.Log[Config.History.EndIndex] = fmt.Sprintf("./%s", command)
+		commandString := fmt.Sprintf("./%s", command)
+		if argsString != "" {
+			commandString = fmt.Sprintf("%s %s", commandString, argsString)
+		}
+		if flagsString != "" {
+			commandString = fmt.Sprintf("%s %s", commandString, flagsString)
+		}
+		Config.History.Log[Config.History.EndIndex] = commandString
 
 		// Save the config
 		err := SaveConfig()
