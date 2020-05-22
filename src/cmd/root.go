@@ -78,7 +78,7 @@ var rootCmd = &cobra.Command{
 		}
 
 		// Write the command to history
-		Config.History.Log[Config.History.EndIndex] = command
+		Config.History.Log[Config.History.EndIndex] = fmt.Sprintf("./%s", command)
 
 		// Save the config
 		err := SaveConfig()

@@ -6,11 +6,11 @@
    "jason project",
    "jason project",
    "jason get",
-   "jason project",
+   "jason checkout",
    "jason get"
   ],
-  "startIndex": 3,
-  "endIndex": 2,
+  "startIndex": 4,
+  "endIndex": 3,
   "length": 5,
   "capacity": 5,
   "commonCommands": {}
