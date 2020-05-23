@@ -28,7 +28,7 @@ type HistoryConfig struct {
 
 var Config ConfigFile
 
-var ConfigName = ".jasonConfig.json"
+var ConfigName = ".jnocConfig.json"
 
 func LoadConfig() {
 	file, err := ioutil.ReadFile(ConfigName)
@@ -59,12 +59,21 @@ func SaveConfig() error {
 var version bool
 
 var rootCmd = &cobra.Command{
-	Use:   "jason",
-	Short: "Tool for managing Just A System Of Notes",
+	Use: "jnoc",
+	Example: `Create a Project:
+$ ./jnoc project My/First/Project --new
+
+Checkout the Project to easily create Notes in it:
+$ ./jnoc checkout My/First/Project
+
+Create a Note:
+$ ./jnoc note # You will be prompted for a Note Name
+`,
+	Short: "Just a tool for managing your Notes On Computer",
 	Run: func(cmd *cobra.Command, args []string) {
 		if version {
 			v := "1.0.0"
-			fmt.Printf("Just A System Of Notes %s\n", v)
+			fmt.Printf("Just Notes On Computer %s\n", v)
 		}
 	},
 	PersistentPreRun: func(cmd *cobra.Command, args []string) {
@@ -134,7 +143,7 @@ func getHistoryIndexBackward(currIndex int) int {
 }
 
 func Execute() {
-	rootCmd.Flags().BoolVar(&version, "version", false, "Version of JASON")
+	rootCmd.Flags().BoolVar(&version, "version", false, "Version of jnoc")
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)

@@ -19,23 +19,23 @@ func init() {
 var moveCmd = &cobra.Command{
 	Use: "move SOURCE TARGET",
 	Example: `Move a file:
-$ ./jason move <path/name.md> <newpath>
+$ ./jnoc move <path/name.md> <newpath>
 
 Rename a file:
-$ ./jason move <path/name-ID.md> <newpath/newname>       // a new ID will be added
-$ ./jason move <path/name-ID.md> <newpath/newname-ID.md> // provided ID is used
+$ ./jnoc move <path/name-ID.md> <newpath/newname>       // a new ID will be added
+$ ./jnoc move <path/name-ID.md> <newpath/newname-ID.md> // provided ID is used
 
 Move and rename a file:
-$ ./jason move <path/name.md> <newpath/newname-ID.md>
+$ ./jnoc move <path/name.md> <newpath/newname-ID.md>
 
 Move a directory:
-$ ./jason move <directorypath/directoryname> <newdirectorypath/directoryname>
+$ ./jnoc move <directorypath/directoryname> <newdirectorypath/directoryname>
 
 Rename a directory:
-$ ./jason move <directorypath/directoryname> <directorypath/newdirectoryname>
+$ ./jnoc move <directorypath/directoryname> <directorypath/newdirectoryname>
 
 Move and rename a directory:
-$ ./jason move <directorypath/directoryname> <newdirectorypath/newdirectoryname>`,
+$ ./jnoc move <directorypath/directoryname> <newdirectorypath/newdirectoryname>`,
 	Aliases: []string{"mv"},
 	Short:   "Move and/or rename Notes and Projects",
 	Long: `Move and/or rename Notes and Projects:

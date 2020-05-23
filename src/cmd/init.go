@@ -26,7 +26,7 @@ var initCmd = &cobra.Command{
 		util.Exec("mkdir Staging")
 
 		// Create config file
-		c := ConfigFile{
+		Config = ConfigFile{
 			Project:      "Staging",
 			ProjectDepth: 1,
 			History: HistoryConfig{
@@ -38,7 +38,7 @@ var initCmd = &cobra.Command{
 				CommonCommands: map[string]int{},
 			},
 		}
-		configBytes, err := json.MarshalIndent(c, "", " ")
+		configBytes, err := json.MarshalIndent(Config, "", " ")
 		if err != nil {
 			return fmt.Errorf("failed to serialize Vault Config: %+v", err)
 		}
