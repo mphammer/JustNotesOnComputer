@@ -27,25 +27,24 @@ var checkoutCmd = &cobra.Command{
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
+		// Set the project
+		projectPath := ""
 		if len(args) == 0 {
-			fmt.Printf("Current Project: %+v\n", Config.Project)
-			err := ListProjects()
-			if err != nil {
-				return fmt.Errorf("%+v", err)
-			}
-			return nil
+			projectPath = "."
+		} else {
+			projectPath = args[0]
 		}
+
 		if setNewProject {
 			// Create a new Project
-			execCmd := fmt.Sprintf("mkdir -p %s", args[0])
+			execCmd := fmt.Sprintf("mkdir -p %s", projectPath)
 			_, err := util.Exec(execCmd)
 			if err != nil {
 				return fmt.Errorf("failed to execute '%+v': %+v", cmd, err)
 			}
 		}
-		// Set the project
-		projectPath := args[0]
-		if num, err := strconv.Atoi(args[0]); err == nil {
+
+		if num, err := strconv.Atoi(projectPath); err == nil {
 			projectPath, err = GetDirByIndex(num)
 			if err != nil {
 				return fmt.Errorf("failed to get project number '%d': %+v", num, err)
@@ -58,7 +57,11 @@ var checkoutCmd = &cobra.Command{
 
 		Config.Project = projectPath
 		newDepth := len(strings.Split(projectPath, "/"))
-		Config.ProjectDepth = newDepth
+		if projectPath == "." {
+			Config.ProjectDepth = 0
+		} else {
+			Config.ProjectDepth = newDepth
+		}
 
 		err := SaveConfig()
 		if err != nil {

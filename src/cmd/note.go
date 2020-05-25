@@ -12,16 +12,17 @@ import (
 )
 
 var newNoteName string
-var noteProjectName string
+var noteType string
 
 func init() {
 	rootCmd.AddCommand(noteCmd)
 	noteCmd.Flags().StringVarP(&newNoteName, "rename", "r", "", "Rename the note") // TODO (maybe make function)
-	noteCmd.Flags().StringVarP(&noteProjectName, "project", "p", "", "Project to create note in")
+	noteCmd.Flags().StringVarP(&noteType, "type", "t", "note", "Type of note to create [booksummary|contact|journal|note]")
+	noteCmd.Flags().StringVarP(&noteType, "edit", "e", "", "Opens the note in the command line editor after creation")
 }
 
 var noteCmd = &cobra.Command{
-	Use:     "note NOTE_TYPE",
+	Use:     "note [PROJECT_PATH]",
 	Aliases: []string{"n"},
 	Short:   "Create and rename Notes",
 	Long: `Create a new note:
@@ -38,19 +39,29 @@ Note Types:
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
-		noteType := "N"
+		// TODO
+		// > if path is to a Project -> create a note there
+		// > if path is to a Note that exists -> open note in editor
+		// > if path is to a Note that doesn't exists -> something
+		projectPath := Config.Project
 		if len(args) == 1 {
-			noteType = args[0]
+			projectPath = args[0]
+		}
+		if projectPath == "." {
+			return fmt.Errorf("Must provide PROJECT_PATH or checkout a project")
+		}
+		if noteType == "" {
+			noteType = "N"
 		}
 		switch strings.ToUpper(noteType) {
 		case "BOOKSUMMARY", "BS":
-			createBookSummary()
+			createBookSummary(projectPath)
 		case "CONTACT", "C":
-			createContact()
+			createContact(projectPath)
 		case "JOURNAL", "J":
-			createJournal()
+			createJournal(projectPath)
 		case "NOTE", "N":
-			createNote()
+			createNote(projectPath)
 		default:
 			return fmt.Errorf("'%s' is not a valid note type", noteType)
 		}
@@ -58,11 +69,7 @@ Note Types:
 	},
 }
 
-func createGeneric(filename, templatePath string, patches map[string]string) error {
-	projectPath := Config.Project
-	if noteProjectName != "" {
-		projectPath = noteProjectName
-	}
+func createGeneric(projectPath, filename, templatePath string, patches map[string]string) error {
 	id := util.GetID()
 	noteName := fmt.Sprintf("%s-%s.md", filename, id)
 	notePath := fmt.Sprintf("%s/%s", projectPath, noteName)
@@ -100,7 +107,7 @@ func createGeneric(filename, templatePath string, patches map[string]string) err
 	return nil
 }
 
-func createBookSummary() error {
+func createBookSummary(path string) error {
 	title := util.Input("Book Title: ")
 	title = strings.Title(title)
 	filename := strings.Replace(title, " ", "", -1)
@@ -111,12 +118,12 @@ func createBookSummary() error {
 		"TODO_BOOK_NAME_TAG":  filename,
 	}
 	templatePath := "_templates/BookSummary.md"
-	createGeneric(filename, templatePath, patches)
+	createGeneric(path, filename, templatePath, patches)
 
 	return nil
 }
 
-func createContact() error {
+func createContact(path string) error {
 	name := util.Input("Name: ")
 	name = strings.Title(name)
 	filename := strings.Replace(name, " ", "", -1)
@@ -126,12 +133,12 @@ func createContact() error {
 		"TODO_TAG":  filename,
 	}
 	templatePath := "_templates/Contact.md"
-	createGeneric(filename, templatePath, patches)
+	createGeneric(path, filename, templatePath, patches)
 
 	return nil
 }
 
-func createJournal() error {
+func createJournal(path string) error {
 	t := time.Now()
 	year := t.Year()
 	month := t.Month()
@@ -143,12 +150,12 @@ func createJournal() error {
 		"TODO_DATE": dateString,
 	}
 	templatePath := "_templates/Journal.md"
-	createGeneric(filename, templatePath, patches)
+	createGeneric(path, filename, templatePath, patches)
 
 	return nil
 }
 
-func createNote() error {
+func createNote(path string) error {
 	noteTopic := util.Input("Note Topic: ")
 	noteTopic = strings.Title(noteTopic)
 	filename := strings.Replace(noteTopic, " ", "", -1)
@@ -157,7 +164,7 @@ func createNote() error {
 		"TODO_NOTE_TOPIC": noteTopic,
 	}
 	templatePath := "_templates/Note.md"
-	createGeneric(filename, templatePath, patches)
+	createGeneric(path, filename, templatePath, patches)
 
 	return nil
 }
