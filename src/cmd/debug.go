@@ -18,14 +18,35 @@ var debugCmd = &cobra.Command{
 	Use:   "debug",
 	Short: "Debug issues with your System of Notes",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		// Check all links point to files
+		// TODO
 		// Check all ../'s go to the correct depth
 		// Check no duplicate project names
-		// Check the _data and _templates directories exist
-		// Check the .vaultconfig.json exists
-		// Check the .vaultconfig.json points to existing Project
 
-		err := CheckProjects(".")
+		// Verify _data directory exists
+		_, err := util.IsDir("_data")
+		if err != nil {
+			return fmt.Errorf("Error checking _data: %+v", err)
+		}
+
+		// Verify _templates directory exists
+		_, err = util.IsDir("_templates")
+		if err != nil {
+			return fmt.Errorf("Error checking _templates: %+v", err)
+		}
+
+		// Verify .jnocConfig file exists
+		_, err = util.IsFile(".jnocConfig.json")
+		if err != nil {
+			return fmt.Errorf("Error checking .jnocConfig.json: %+v", err)
+		}
+
+		// Check the .vaultconfig.json points to existing Project
+		_, err = util.IsDir(Config.Project)
+		if err != nil {
+			return fmt.Errorf("Error locating Project in file .jnocConfig: %+v", err)
+		}
+
+		err = CheckProjects(".")
 		if err != nil {
 			return fmt.Errorf("%s", err)
 		}
