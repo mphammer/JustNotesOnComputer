@@ -40,7 +40,8 @@ var findCmd = &cobra.Command{
 		}
 
 		pattern := args[0]
-		grep, err := util.Exec(fmt.Sprintf("grep -r -n -i '%s' %s", pattern, searchPath))
+		grepCmd := fmt.Sprintf("grep -r -n -i '%s' %s", pattern, searchPath)
+		grep, err := util.Exec(grepCmd)
 		if err != nil {
 			return fmt.Errorf("no results for '%+v'", pattern)
 		}
