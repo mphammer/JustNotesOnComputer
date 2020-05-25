@@ -1,16 +1,16 @@
 {
- "project": "testFiles/Animals",
- "projectDepth": 2,
+ "project": "Playground",
+ "projectDepth": 1,
  "history": {
   "log": [
-   "./jnoc checkout 6",
-   "./jnoc note",
-   "./jnoc note",
-   "./jnoc note",
+   "./jnoc find a",
+   "./jnoc checkout Playground",
+   "./jnoc list",
+   "./jnoc project",
    "./jnoc project"
   ],
-  "startIndex": 3,
-  "endIndex": 2,
+  "startIndex": 4,
+  "endIndex": 3,
   "length": 5,
   "capacity": 5,
   "commonCommands": {}

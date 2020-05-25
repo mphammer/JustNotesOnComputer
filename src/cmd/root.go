@@ -69,7 +69,9 @@ $ ./jnoc checkout My/First/Project
 Create a Note:
 $ ./jnoc note # You will be prompted for a Note Name
 `,
-	Short: "Just a tool for managing your Notes On Computer",
+	SilenceErrors: true,
+	SilenceUsage:  true,
+	Short:         "Just a tool for managing your Notes On Computer",
 	Run: func(cmd *cobra.Command, args []string) {
 		if version {
 			v := "1.0.0"

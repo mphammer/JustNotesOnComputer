@@ -13,12 +13,14 @@ import (
 
 var newNoteName string
 var noteType string
+var noteInput string
 
 func init() {
 	rootCmd.AddCommand(noteCmd)
 	noteCmd.Flags().StringVarP(&newNoteName, "rename", "r", "", "Rename the note") // TODO (maybe make function)
 	noteCmd.Flags().StringVarP(&noteType, "type", "t", "note", "Type of note to create [booksummary|contact|journal|note]")
 	noteCmd.Flags().StringVarP(&noteType, "edit", "e", "", "Opens the note in the command line editor after creation")
+	noteCmd.Flags().StringVarP(&noteInput, "input", "i", "", "Into to pass to the note prompt (Ex: Note Name)")
 }
 
 var noteCmd = &cobra.Command{
@@ -108,7 +110,10 @@ func createGeneric(projectPath, filename, templatePath string, patches map[strin
 }
 
 func createBookSummary(path string) error {
-	title := util.Input("Book Title: ")
+	title := noteInput
+	if title == "" {
+		title = util.Input("Book Title: ")
+	}
 	title = strings.Title(title)
 	filename := strings.Replace(title, " ", "", -1)
 
@@ -124,7 +129,10 @@ func createBookSummary(path string) error {
 }
 
 func createContact(path string) error {
-	name := util.Input("Name: ")
+	name := noteInput
+	if name == "" {
+		name = util.Input("Name: ")
+	}
 	name = strings.Title(name)
 	filename := strings.Replace(name, " ", "", -1)
 
@@ -139,6 +147,9 @@ func createContact(path string) error {
 }
 
 func createJournal(path string) error {
+	if noteInput != "" {
+		fmt.Printf("[WARN] Journal doesn't take --input\n")
+	}
 	t := time.Now()
 	year := t.Year()
 	month := t.Month()
@@ -156,7 +167,10 @@ func createJournal(path string) error {
 }
 
 func createNote(path string) error {
-	noteTopic := util.Input("Note Topic: ")
+	noteTopic := noteInput
+	if noteTopic == "" {
+		noteTopic = util.Input("Note Topic: ")
+	}
 	noteTopic = strings.Title(noteTopic)
 	filename := strings.Replace(noteTopic, " ", "", -1)
 
