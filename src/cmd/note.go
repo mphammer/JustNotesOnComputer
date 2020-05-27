@@ -14,6 +14,7 @@ import (
 var newNoteName string
 var noteType string
 var noteInput string
+var noteTags []string
 
 func init() {
 	rootCmd.AddCommand(noteCmd)
@@ -21,6 +22,7 @@ func init() {
 	noteCmd.Flags().StringVarP(&noteType, "type", "t", "note", "Type of note to create [booksummary|contact|journal|note]")
 	noteCmd.Flags().StringVarP(&noteType, "edit", "e", "", "Opens the note in the command line editor after creation")
 	noteCmd.Flags().StringVarP(&noteInput, "input", "i", "", "Into to pass to the note prompt (Ex: Note Name)")
+	noteCmd.Flags().StringSliceVarP(&noteTags, "tags", "g", []string{}, "Tags to set when creating a note")
 }
 
 var noteCmd = &cobra.Command{
