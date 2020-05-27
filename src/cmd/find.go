@@ -76,11 +76,8 @@ var findNoteCmd = &cobra.Command{
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		searchPath := Config.Project
-		if findCmdProjectName != "" {
-			searchPath = findCmdProjectName
-		}
-		if all {
-			searchPath = "."
+		if len(args) == 2 {
+			searchPath = args[1]
 		}
 
 		pattern := args[0]

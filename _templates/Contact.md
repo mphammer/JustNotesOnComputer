@@ -6,7 +6,6 @@ File Path: TODO_FILE_PATH
 Root Path: TODO_ROOT_PATH  
 Tags: [ #Contact #TODO_TAG ]  
 Related Notes:  
-[link 1](N/A)  
 
 ---
  

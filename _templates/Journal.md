@@ -6,7 +6,6 @@ File Path: TODO_FILE_PATH
 Root Path: TODO_ROOT_PATH  
 Tags: [ #DailyNote ]  
 Related Notes:  
-[link 1](N/A)  
 
 ---
  

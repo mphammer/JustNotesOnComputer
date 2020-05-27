@@ -7,7 +7,6 @@ File Path: TODO_FILE_PATH
 Root Path: TODO_ROOT_PATH  
 Tags: [ #BookSummary #TODO_BOOK_NAME_TAG #TODO_TAGS ]  
 Related Notes:  
-[TODO_RELATED_NOTES](.)  
 
 ---
  
