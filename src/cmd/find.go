@@ -8,35 +8,28 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var verbose bool
-var all bool
-var findCmdProjectName string
+var suppress bool
 
 func init() {
 	rootCmd.AddCommand(findCmd)
-	findCmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "Print more information")
-	findCmd.Flags().BoolVarP(&all, "all", "a", false, "Search in all projects")
-	findCmd.Flags().StringVarP(&findCmdProjectName, "project", "p", "", "Project to search in")
+	findCmd.Flags().BoolVarP(&suppress, "suppress", "s", false, "Print less information")
 
 	findCmd.AddCommand(findNoteCmd)
 }
 
 var findCmd = &cobra.Command{
-	Use:   "find PATTERN",
+	Use:   "find PATTERN [PATH]",
 	Short: "Search through contents of Notes (default searches in the current Project)",
 	Args: func(cmd *cobra.Command, args []string) error {
-		if len(args) != 1 {
-			return fmt.Errorf("this command takes 1 argument")
+		if len(args) != 2 && len(args) != 1 {
+			return fmt.Errorf("this command takes 1 or 2 arguments")
 		}
 		return nil
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		searchPath := Config.Project
-		if findCmdProjectName != "" {
-			searchPath = findCmdProjectName
-		}
-		if all {
-			searchPath = "."
+		if len(args) == 2 {
+			searchPath = args[1]
 		}
 
 		pattern := args[0]
@@ -58,13 +51,13 @@ var findCmd = &cobra.Command{
 			lineNum := splitLine[1]
 			result := splitLine[2]
 			if _, ok := foundMap[filename]; !ok {
-				if verbose {
+				if !suppress {
 					fmt.Println("")
 				}
 				fmt.Printf("%+v\n", filename)
 				foundMap[filename] = true
 			}
-			if verbose {
+			if !suppress {
 				fmt.Printf("[%s] %s\n", lineNum, result)
 			}
 		}
