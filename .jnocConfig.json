@@ -1,16 +1,19 @@
 {
  "project": "Playground",
  "projectDepth": 1,
+ "hotKeys": {
+  "test": "./jnoc project"
+ },
  "history": {
   "log": [
-   "./jnoc edit Playground/Animals/FruitFly-2020523121936.md  --open-with-text-editor true",
+   "./jnoc hot-key test",
+   "./jnoc hot-key set hi ",
+   "./jnoc hot-key set test ./jnoc project",
    "./jnoc project",
-   "./jnoc note  --edit true --input hi there",
-   "./jnoc note  --edit true --input hi there --tags [hi,there]",
-   "./jnoc edit Playground/Animals/FruitFly-2020523121936.md  --open-with-text-editor true"
+   "./jnoc hot-key"
   ],
-  "startIndex": 4,
-  "endIndex": 3,
+  "startIndex": 1,
+  "endIndex": 0,
   "length": 5,
   "capacity": 5,
   "commonCommands": {}

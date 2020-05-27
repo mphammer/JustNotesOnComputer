@@ -12,9 +12,10 @@ import (
 )
 
 type ConfigFile struct {
-	Project      string        `json:"project"`
-	ProjectDepth int           `json:"projectDepth"`
-	History      HistoryConfig `json:"history"`
+	Project      string            `json:"project"`
+	ProjectDepth int               `json:"projectDepth"`
+	HotKeys      map[string]string `json:"hotKeys"`
+	History      HistoryConfig     `json:"history"`
 }
 
 type HistoryConfig struct {
