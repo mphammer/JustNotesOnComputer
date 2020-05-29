@@ -52,13 +52,13 @@ var findCmd = &cobra.Command{
 			lineNum := splitLine[1]
 			result := splitLine[2]
 			if _, ok := foundMap[filename]; !ok {
-				if !verbose {
+				if verbose {
 					fmt.Println("")
 				}
 				fmt.Printf("%s\n", filepath.Clean(filename))
 				foundMap[filename] = true
 			}
-			if !verbose {
+			if verbose {
 				fmt.Printf("[%s] %s\n", lineNum, result)
 			}
 		}
