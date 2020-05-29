@@ -3,16 +3,17 @@ package cmd
 import (
 	"SecondBrain/src/util"
 	"fmt"
+	"path/filepath"
 	"strings"
 
 	"github.com/spf13/cobra"
 )
 
-var suppress bool
+var verbose bool
 
 func init() {
 	rootCmd.AddCommand(findCmd)
-	findCmd.Flags().BoolVarP(&suppress, "suppress", "s", false, "Print less information")
+	findCmd.Flags().BoolVarP(&verbose, "verbose", "s", false, "Print line information")
 
 	findCmd.AddCommand(findNoteCmd)
 }
@@ -51,13 +52,13 @@ var findCmd = &cobra.Command{
 			lineNum := splitLine[1]
 			result := splitLine[2]
 			if _, ok := foundMap[filename]; !ok {
-				if !suppress {
+				if !verbose {
 					fmt.Println("")
 				}
-				fmt.Printf("%+v\n", filename)
+				fmt.Printf("%s\n", filepath.Clean(filename))
 				foundMap[filename] = true
 			}
-			if !suppress {
+			if !verbose {
 				fmt.Printf("[%s] %s\n", lineNum, result)
 			}
 		}

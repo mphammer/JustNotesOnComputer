@@ -17,8 +17,8 @@ func init() {
 }
 
 var projectCmd = &cobra.Command{
-	Use:     "project [NAME]",
-	Short:   "List, Create, and Rename Projects",
+	Use:     "project [PROJECT_PATH]",
+	Short:   "List, Create, Delete, and Rename Projects",
 	Aliases: []string{"p", "proj"},
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 1 {

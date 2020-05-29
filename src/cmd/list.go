@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"io/ioutil"
+	"path/filepath"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -50,16 +51,19 @@ func PrintDirectoryContents(path string) error {
 	if err != nil {
 		return fmt.Errorf("%+v", err)
 	}
+	path = path
 
 	for _, f := range files {
 		if f.Name()[0:1] == "." || f.Name()[0:1] == "_" {
 			continue
 		}
+		printPath := ""
 		if f.IsDir() {
-			fmt.Printf("%s/%+v\n", path, f.Name())
+			printPath = fmt.Sprintf("%s/%+v\n", path, f.Name())
 		} else {
-			fmt.Printf("%s/%+v\n", path, f.Name())
+			printPath = fmt.Sprintf("%s/%+v\n", path, f.Name())
 		}
+		fmt.Printf("%s", filepath.Clean(printPath))
 	}
 
 	return nil
