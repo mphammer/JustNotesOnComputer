@@ -18,6 +18,12 @@ var hotKeyCmd = &cobra.Command{
 	Use:     "hot-key [HOT_KEY]",
 	Short:   "Execute a hot key",
 	Aliases: []string{"hk"},
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) > 1 {
+			return fmt.Errorf("this command takes up to 1 argument")
+		}
+		return nil
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
 			if len(Config.HotKeys) == 0 {
@@ -48,6 +54,12 @@ var setHotKeyCmd = &cobra.Command{
 	Use:     "set HOT_KEY COMMAND",
 	Short:   "Set a hot key value",
 	Example: "# set a hot-key\njnoc hot-key set 1 ls\n\n# delete a hot key\njnoc hot-key set 1 \"\"",
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) != 2 {
+			return fmt.Errorf("this command takes 2 arguments")
+		}
+		return nil
+	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		Config.HotKeys[args[0]] = args[1]
 		if args[1] == "" {

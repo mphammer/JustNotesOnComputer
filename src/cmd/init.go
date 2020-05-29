@@ -29,6 +29,7 @@ var initCmd = &cobra.Command{
 		Config = ConfigFile{
 			Project:      "Staging",
 			ProjectDepth: 1,
+			HotKeys:      map[string]string{},
 			History: HistoryConfig{
 				Log:            make([]string, 20),
 				StartIndex:     1,

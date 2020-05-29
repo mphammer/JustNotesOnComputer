@@ -6,14 +6,14 @@
  },
  "history": {
   "log": [
-   "./jnoc list .",
+   "./jnoc hot-key test",
    "./jnoc find tiger .",
    "./jnoc project .",
    "./jnoc project",
-   "./jnoc list ."
+   "./jnoc hot-key"
   ],
-  "startIndex": 4,
-  "endIndex": 3,
+  "startIndex": 1,
+  "endIndex": 0,
   "length": 5,
   "capacity": 5,
   "commonCommands": {}
