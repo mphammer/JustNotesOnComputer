@@ -26,20 +26,35 @@ var editCmd = &cobra.Command{
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		notePath := args[0]
-		execCmd := ""
 		if editWithTextEditor {
-			execCmd = fmt.Sprintf("open %s", notePath)
-			_, err := util.Exec(execCmd)
+			err := editWithDefaultEditor(notePath)
 			if err != nil {
 				return fmt.Errorf("failed to exec: %+v", err)
 			}
 		} else {
-			execCmd = fmt.Sprintf("vim %s", notePath)
-			err := util.ExecShell(execCmd)
+			err := editWithVim(notePath)
 			if err != nil {
 				return fmt.Errorf("failed to exec: %+v", err)
 			}
 		}
 		return nil
 	},
+}
+
+func editWithDefaultEditor(notePath string) error {
+	execCmd := fmt.Sprintf("open %s", notePath)
+	_, err := util.Exec(execCmd)
+	if err != nil {
+		return fmt.Errorf("failed to exec: %+v", err)
+	}
+	return nil
+}
+
+func editWithVim(notePath string) error {
+	execCmd := fmt.Sprintf("vim %s", notePath)
+	err := util.ExecShell(execCmd)
+	if err != nil {
+		return fmt.Errorf("failed to exec: %+v", err)
+	}
+	return nil
 }

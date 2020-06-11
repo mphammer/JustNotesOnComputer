@@ -6,14 +6,14 @@
  },
  "history": {
   "log": [
-   "./jnoc hot-key test",
-   "./jnoc find tiger .",
-   "./jnoc project .",
-   "./jnoc project",
-   "./jnoc hot-key"
+   "./jnoc note  --input test2 --open-with-text-editor true",
+   "./jnoc edit Playground/Test2-2020611182341.md  --open-with-text-editor true",
+   "./jnoc edit Playground/Test2-2020611182341.md",
+   "./jnoc list",
+   "./jnoc note  --input test --open-with-text-editor true"
   ],
-  "startIndex": 1,
-  "endIndex": 0,
+  "startIndex": 4,
+  "endIndex": 3,
   "length": 5,
   "capacity": 5,
   "commonCommands": {}
