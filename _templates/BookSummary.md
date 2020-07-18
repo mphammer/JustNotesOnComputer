@@ -9,7 +9,7 @@ Tags: [ #BookSummary #TODO_BOOK_NAME_TAG #TODO_TAGS ]
 Related Notes:  
 
 ---
- 
+
 # Review
 TODO...
 

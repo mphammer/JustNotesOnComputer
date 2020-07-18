@@ -8,6 +8,6 @@ Tags: [ #DailyNote ]
 Related Notes:  
 
 ---
- 
+
 ## What Did You Do Today?
 * TODO_ACTIVITIES

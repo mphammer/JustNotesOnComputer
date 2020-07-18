@@ -8,7 +8,7 @@ Tags: [ #Contact #TODO_TAG ]
 Related Notes:  
 
 ---
- 
+
 Phone Number:  
 Email:  
 Company:  

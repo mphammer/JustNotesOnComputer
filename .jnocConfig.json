@@ -6,14 +6,14 @@
  },
  "history": {
   "log": [
-   "./jnoc note  --input test2 --open-with-text-editor true",
-   "./jnoc edit Playground/Test2-2020611182341.md  --open-with-text-editor true",
-   "./jnoc edit Playground/Test2-2020611182341.md",
    "./jnoc list",
-   "./jnoc note  --input test --open-with-text-editor true"
+   "./jnoc list Playground/Animals",
+   "./jnoc remove Playground/Animals/Animals-2020523121949.md",
+   "./jnoc move Playground/Animals/Tiger-2020525122745.md Playground/Mythical",
+   "./jnoc move Playground/Mythical/Tiger-2020525122745.md Playground/Animals"
   ],
-  "startIndex": 4,
-  "endIndex": 3,
+  "startIndex": 0,
+  "endIndex": 4,
   "length": 5,
   "capacity": 5,
   "commonCommands": {}
