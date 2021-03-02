@@ -1,10 +1,24 @@
-# Zettlekasten
+# Just Notes On Comptuer (JNOC)
 
-Simply clone this repo and begin creating your personal management system.
+## Overview
 
-## Text Editors
+This is a very simple implementation of the Zettlekasten, Slip Box, and Smart Notes that's on your local machine. 
+
+Advantages
+
+* You don't have to worry about your note taking apps becoming outdated. Text files with Markdown are here to stay.
+* You can easily write your own scripts to interact with the files
+* You can edit notes with the editor of your choosing (VS Code, vim, emacs, Atom, Typora, etc.)
+
+Simply clone this repo and begin creating your personal notes system. The repo inclusdes the `jnoc` binary that helps you create the notes. 
+
+For more information run `./jnoc --help`
+
+## Navigatind Between Notes
 ### VS Code
-Allows you to cmd+click to go to different notes
+`cmd+click` on a path to a note to open it. 
+### Vim
+Move the cursor over the path and type `gf`.
 
 ## Note Structure
 
@@ -21,11 +35,11 @@ Example:
 ID: 202004291359  
 Tags: [ #NegativeVisualization #Tranquility ]  
 Related Notes:  
-[link 1](AGuideToTheGoodLife-202004291355.md)  
+[link 1](../AGuideToTheGoodLife-202004291355.md)  
 
 ---
 
-TODO...
+Negative Visualization is a technique...
 
 ---
 
@@ -36,7 +50,7 @@ TODO...
 
 ### Creating a New Note
 ```
-./z z
+./jnoc note
 Note Topic: Curriculum
 Note: Zettles/Curriculum-20200505114433.md
 ```
