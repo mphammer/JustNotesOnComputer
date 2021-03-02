@@ -14,7 +14,7 @@ Simply clone this repo and begin creating your personal notes system. The repo i
 
 For more information run `./jnoc --help`
 
-## Navigatind Between Notes
+## Navigating Between Notes
 ### VS Code
 `cmd+click` on a path to a note to open it. 
 ### Vim
